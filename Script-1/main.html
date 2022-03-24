@@ -1,0 +1,244 @@
+<head>
+</head>
+
+<body>
+    <form id="myForm">
+        <input type="file" id="csvFile" accept=".csv" />
+        <br />
+        <input type="submit" value="Submit" />
+    </form>
+
+
+    <!--<button id="nombresId">Nombres</button>
+    <button id="dmiID">DMI</button>
+    <button id="hamburguesasId">Hamburguesas</button>-->
+
+    <div>
+        <label for="personajeUno">Estudiante 1</label>
+        <select name="personajeUno" id="personajeUno">
+            <option value="0">Daniela Agudelo</option>
+            <option value="1">Elizabeth Aldana</option>
+            <option value="2">Yuilsi Alvarado</option>
+            <option value="3">Juan Camilo Bermeo</option>
+            <option value="4">Alejandro Brand</option>
+            <option value="5">Andres Burgos</option>
+            <option value="6">Laura Cobo</option>
+            <option value="7">Angelica Cruz</option>
+            <option value="8">Daniel Diaz</option>
+            <option value="9">Paula Dulcey</option>
+            <option value="10">Laura Duque</option>
+            <option value="11">Julian Enciso</option>
+            <option value="12">Jaime Fresneda</option>
+            <option value="13">Nathaly Mena</option>
+            <option value="14">Cristian Mendez</option>
+            <option value="15">Isabella Molina</option>
+            <option value="16">Gabriel Mora</option>
+            <option value="17">Erika Papamija</option>
+            <option value="18">Yoshiki Tsutsui</option>
+            <option value="19">Ingrid Vallecilla</option>
+        </select>
+    </div>
+    <div>
+        <label for="personajeDos">Estudiante 2</label>
+        <select name="personajeDos" id="personajeDos">
+            <option value="0">Daniela Agudelo</option>
+            <option value="1">Elizabeth Aldana</option>
+            <option value="2">Yuilsi Alvarado</option>
+            <option value="3">Juan Camilo Bermeo</option>
+            <option value="4">Alejandro Brand</option>
+            <option value="5">Andres Burgos</option>
+            <option value="6">Laura Cobo</option>
+            <option value="7">Angelica Cruz</option>
+            <option value="8">Daniel Diaz</option>
+            <option value="9">Paula Dulcey</option>
+            <option value="10">Laura Duque</option>
+            <option value="11">Julian Enciso</option>
+            <option value="12">Jaime Fresneda</option>
+            <option value="13">Nathaly Mena</option>
+            <option value="14">Cristian Mendez</option>
+            <option value="15">Isabella Molina</option>
+            <option value="16">Gabriel Mora</option>
+            <option value="17">Erika Papamija</option>
+            <option value="18">Yoshiki Tsutsui</option>
+            <option value="19">Ingrid Vallecilla</option>
+        </select>
+    </div>
+    <button id="comparar">Comparar</button>
+
+    <div id="resultados">Comparación entre...?</div>
+
+    <script>
+
+        let forAllData;
+        let isTrue = false;
+        const myForm = document.getElementById("myForm");
+        const csvFile = document.getElementById("csvFile");
+        myForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const input = csvFile.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const text = e.target.result;
+                const data = csvToArray(text);
+                //console.log(data);
+                forAllData = getData(data);
+                console.log(forAllData);
+                //document.write(JSON.stringify(data));
+            };
+            reader.readAsText(input);
+        });
+
+        function csvToArray(str, delimiter = ",") {
+            const headers = str.slice(0, str.indexOf("\r\n")).split(delimiter);
+            const rows = str.slice(str.indexOf("\n") + 1).split("\n");
+
+            const arr = rows.map(function (row) {
+                const values = row.split(delimiter);
+                const el = headers.reduce(function (object, header, index) {
+                    object[header] = values[index];
+                    return object;
+                }, {});
+                return el;
+            });
+            return arr;
+        }
+
+        function getData(data) {
+            return data;
+        }
+
+        /*const nombresId = document.getElementById("nombresId");
+        const dmiID = document.getElementById("dmiID");
+        const hamburguesasId = document.getElementById("hamburguesasId");
+
+        nombresId.addEventListener("click", e => {
+            //Para datos de strings
+            isTrue = !isTrue;
+            if (isTrue) {
+                console.log("Nombres: Ascedente");
+                forAllData.sort((a, b) => {
+                    let fa = a.Nombres.toLowerCase(),
+                        fb = b.Nombres.toLowerCase();
+
+                    if (fa < fb) {
+                        return -1;
+                    }
+                    if (fa > fb) {
+                        return 1;
+                    }
+                    return 0;
+                });
+            } else {
+                console.log("Nombres: Descedente");
+                forAllData.sort((a, b) => {
+                    let fa = a.Nombres.toLowerCase(),
+                        fb = b.Nombres.toLowerCase();
+
+                    if (fb < fa) {
+                        return -1;
+                    }
+                    if (fb > fa) {
+                        return 1;
+                    }
+                    return 0;
+                });
+            }
+
+            //console.log(forAllData);
+            forAllData.forEach((e) => {
+                console.log(`${e.Nombres} ${e.DMI} ${e.HAMBURGUESAS}`);
+            });
+        });
+        dmiID.addEventListener("click", e => {
+            isTrue = !isTrue;
+            if (isTrue) {
+                console.log("DMI: Ascedente");
+                forAllData.sort((a, b) => {
+                    return a.DMI - b.DMI;
+                });
+            } else {
+                console.log("DMI: Descedente");
+                forAllData.sort((a, b) => {
+                    return b.DMI - a.DMI;
+                });
+            }
+            forAllData.forEach((e) => {
+                console.log(`${e.Nombres} ${e.DMI} ${e.HAMBURGUESAS}`);
+            });
+        });
+        hamburguesasId.addEventListener("click", e => {
+            isTrue = !isTrue;
+            if (isTrue) {
+                console.log("Las hamburguesas: Ascedente");
+                forAllData.sort((a, b) => {
+                    return a.HAMBURGUESAS - b.HAMBURGUESAS;
+                });
+            } else {
+                console.log("Las hamburguesas: Descedente");
+                forAllData.sort((a, b) => {
+                    return b.HAMBURGUESAS - a.HAMBURGUESAS;
+                });
+            }
+            forAllData.forEach((e) => {
+                console.log(`${e.Nombres} ${e.DMI} ${e.HAMBURGUESAS}`);
+            });
+        });*/
+
+        //Boton de Comparar
+        const comparar = document.getElementById("comparar");
+        //Lista desplegable (<Select>)
+        const personajeUno = document.getElementById("personajeUno");
+        const personajeDos = document.getElementById("personajeDos");
+
+        //Solo números
+        let numberA = [];
+        let numberB = [];
+        //Números de respuestas
+        let ArrayNumber = 6;
+        //Array producto del AB
+        let ab = [];
+
+        const resultados = document.getElementById("resultados");
+
+        comparar.addEventListener("click", function (e) {
+            total = 0;
+            //Load arrays.
+            let A = forAllData[personajeUno.value];
+            let B = forAllData[personajeDos.value];
+
+            //console.log(A.Nombres);
+            console.log(A.Nombres + " DMI: " + A.DMI + " " + B.Nombres + " DMI: " + B.DMI);
+            console.log(A.Nombres + " FELIZ: " + A.FELIZ + " " + B.Nombres + " FELIZ: " + B.FELIZ);
+            console.log(A.Nombres + " HELADO: " + A.HELADO + " " + B.Nombres + " HELADO: " + B.HELADO);
+            console.log(A.Nombres + " VIDEOJUEGOS: " + A.VIDEOJUEGOS + " " + B.Nombres + " VIDEOJUEGOS: " + B.VIDEOJUEGOS);
+            console.log(A.Nombres + " HAMBURGUESAS: " + A.HAMBURGUESAS + " " + B.Nombres + " HAMBURGUESAS: " + B.HAMBURGUESAS);
+
+            ab[0] = A.DMI * B.DMI;
+            ab[1] = A.FELIZ * B.FELIZ;
+            ab[2] = A.HELADO * B.HELADO;
+            ab[3] = A.VIDEOJUEGOS * B.VIDEOJUEGOS;
+            ab[4] = A.HAMBURGUESAS * B.HAMBURGUESAS;
+            for (let index = 0; index < ArrayNumber - 1; index++) {
+                total += ab[index];
+            }
+
+            //Magnitud del A
+            let totalAMagnitude = Math.hypot(A.DMI, A.FELIZ, A.HELADO, A.VIDEOJUEGOS, A.HAMBURGUESAS);
+            //Magnitud del B
+            let totalBMagnitude = Math.hypot(B.DMI, B.FELIZ, B.HELADO, B.VIDEOJUEGOS, B.HAMBURGUESAS);
+
+            //let cosenos = 0;
+            let multiplicacionTotalMagnitude = totalAMagnitude * totalBMagnitude;
+            cosenos = total / multiplicacionTotalMagnitude;
+            console.log("Comparación: " + cosenos);
+
+            //Obtener la información del id de esa vaina
+            resultados.innerHTML = "Comparación entre " + A.Nombres + " y " + B.Nombres + " es " + cosenos;
+        });
+
+    </script>
+
+</body>
+
+</html>
